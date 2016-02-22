@@ -1,0 +1,39 @@
+INSTALLATION INSTRUCTIONS
+
+To build and install the libfec libraries, simply say
+
+./configure
+make
+make test (optional)
+make install (as root)
+
+By default, "make install" puts the libfec libraries in
+/usr/local/lib, the include files in /usr/local/include, and the
+manual page in /usr/local/man.
+
+You may have an old version of the GNU assembler that cannot handle
+the relatively new SSE2 mnemonics. Update your version of the GNU
+"binutils" package.
+
+You may obtain the latest binutils package through your normal
+distribution channels or from:
+
+http://sources.redhat.com/binutils/
+
+TESTING THE FEC LIBRARY
+
+After running the ./configure script, optional tests can be built and
+run as follows:
+
+make test
+
+"make test" tests each routine, using the SIMD versions as
+appropriate, verifying correct operation and estimating Viterbi
+decoding speeds. These tests should always succeed unless something is
+broken.
+
+28 Mar 2004
+Phil Karn, karn@ka9q.net
+
+
+

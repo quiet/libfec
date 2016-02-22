@@ -1,0 +1,63 @@
+.TH DSP 3
+.SH NAME
+initdp, freedp, dotprod, sumsq, peakval -\ SIMD-assisted
+digital signal processing primitives
+.SH SYNOPSIS
+.nf
+.ft
+#include "fec.h"
+
+void *initdp(signed short *coeffs,int len);
+long dotprod(void *p,signed short *a);
+void freedp(void *p);
+
+unsigned long long sumsq(signed short *in,int cnt);
+
+int peakval(signed short *b,int cnt);
+
+.SH DESCRIPTION
+These functions provide several basic primitives useful in digital
+signal processing (DSP), especially in modems.  The \fBinitdp\fR,
+\fBdotprod\fR and \fBfreedp\fR functions implement an integer dot
+product useful in correlation and filtering operations on signed
+16-bit integers. \fBsumsq\fR computes the sum
+of the squares of an array of signed 16-bit integers,
+useful for measuring the energy of a signal. \fBpeakval\fR returns the
+absolute value of the largest magitude element in the input array,
+useful for scaling a signal's amplitude.
+
+Each function uses IA32 or PowerPC Altivec instructions when
+available; otherwise, a portable C version is used.
+
+.SH USAGE
+To create a FIR filter or correlator, call \fBinitdp\fR with the
+coefficients in \fBcoeff\fR and their number in \fBlen\fR.  This
+creates the appropriate data structures and returns a handle.
+
+To compute a dot product, pass the handle from \fBinitdp\fR and the
+input array to \fBdotprod\fR. No length field is needed as the number
+of samples will be taken from the \fBlen\fR parameter originally given
+to \fBinitdp\fR. There must be at least as many samples in the input
+array as there were coefficients passed to \fBinitdp\fR.
+
+When the filter or correlator is no longer needed, the data structures
+may be freed by passing the handle to \fBfreedp\fR.
+
+The user is responsible for scaling the inputs to \fBinitdp\fR and
+\fBdotprod\fR, as the 32-bit result from \fBdotprod\fR will silently
+wrap around in the event of overflow.
+
+To compute the sum of the squares of an array of signed 16-bit
+integers, use sumsq\fR. This returns a 64 bit sum.
+
+\fBpeakval\fR computes the absolute value of each 16-bit element in
+the input array and returns the largest.
+
+.SH RETURN VALUES
+
+\fBinitdp\fR returns a handle that points to a control block, or NULL in
+the event of an error (such as a memory allocation failure). \fBsumsq\fR
+and \fBpeakval\fR have no error returns.
+
+.SH AUTHOR and COPYRIGHT
+Phil Karn, KA9Q (karn@ka9q.net)

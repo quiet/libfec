@@ -1,0 +1,83 @@
+dnl Process this file with autoconf to produce a configure script.
+AC_INIT(viterbi27.c)
+AC_CONFIG_HEADER(config.h)
+SO_NAME=3
+VERSION=3.0.0
+AC_SUBST(SO_NAME)
+AC_SUBST(VERSION)
+
+dnl Checks for programs.
+AC_PROG_CC
+if test $GCC != "yes"
+then
+	AC_MSG_ERROR([Need GNU C compiler])
+fi
+dnl Checks for libraries.
+AC_CHECK_LIB(c, malloc)
+
+dnl Checks for header files.
+AC_CHECK_HEADERS(getopt.h stdio.h stdlib.h memory.h string.h)
+if test -z "$HAVE_stdio.h"
+then
+	AC_MSG_ERROR([Need stdio.h!])
+fi
+if test -z "$HAVE_stdlib.h"
+then
+	AC_MSG_ERROR([Need stdlib.h!])
+fi
+if test -z "$HAVE_stdlib.h"
+then
+	AC_MSG_ERROR([Need memory.h!])
+fi
+if test -z "$HAVE_string.h"
+then
+	AC_MSG_ERROR([Need string.h])
+fi
+
+AC_CANONICAL_SYSTEM
+case $target_cpu in
+i386|i486|i586|i686)
+	ARCH_OPTION="-march=$target_cpu"
+	MLIBS="viterbi27_mmx.o mmxbfly27.o viterbi27_sse.o ssebfly27.o viterbi27_sse2.o sse2bfly27.o \
+	viterbi29_mmx.o mmxbfly29.o viterbi29_sse.o ssebfly29.o viterbi29_sse2.o sse2bfly29.o \
+	viterbi39_sse2.o viterbi39_sse.o viterbi39_mmx.o \
+	viterbi615_mmx.o viterbi615_sse.o viterbi615_sse2.o \
+	dotprod_mmx.o dotprod_mmx_assist.o \
+	dotprod_sse2.o dotprod_sse2_assist.o \
+	peakval_mmx.o peakval_mmx_assist.o \
+	peakval_sse.o peakval_sse_assist.o \
+	peakval_sse2.o peakval_sse2_assist.o \
+	sumsq.o sumsq_port.o \
+	sumsq_sse2.o sumsq_sse2_assist.o \
+	sumsq_mmx.o sumsq_mmx_assist.o \
+	cpu_features.o cpu_mode_x86.o"
+	;;
+powerpc*)
+	ARCH_OPTION="-fno-common -faltivec"
+	MLIBS="viterbi27_av.o viterbi29_av.o viterbi39_av.o viterbi615_av.o \
+	encode_rs_av.o \
+	dotprod_av.o sumsq_av.o peakval_av.o cpu_mode_ppc.o"
+	;;
+*)
+	MLIBS=
+esac
+case $target_os in
+darwin*)
+	SH_LIB=libfec.dylib
+	REBIND=""
+	;;
+*)
+	SH_LIB=libfec.so
+	REBIND=ldconfig
+	;;
+esac
+AC_SUBST(SH_LIB)
+AC_SUBST(REBIND)
+AC_SUBST(MLIBS)
+AC_SUBST(ARCH_OPTION)
+
+
+dnl Checks for library functions.
+AC_CHECK_FUNCS(getopt_long memset memmove)
+
+AC_OUTPUT(makefile)

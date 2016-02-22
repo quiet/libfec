@@ -1,0 +1,247 @@
+.TH SIMD-VITERBI 3
+.SH NAME
+create_viterbi27, set_viterbi27_polynomial, init_viterbi27, update_viterbi27_blk,
+chainback_viterbi27, delete_viterbi27,
+create_viterbi29, set_viterbi_29_polynomial, init_viterbi29, update_viterbi29_blk,
+chainback_viterbi29, delete_viterbi29,
+create_viterbi39, set_viterbi_39_polynomial, init_viterbi39, update_viterbi39_blk,
+chainback_viterbi39, delete_viterbi39,
+create_viterbi615, set_viterbi615_polynomial, init_viterbi615, update_viterbi615_blk,
+chainback_viterbi615, delete_viterbi615 -\ IA32 SIMD-assisted Viterbi decoders
+.SH SYNOPSIS
+.nf
+.ft B
+#include "fec.h"
+void *create_viterbi27(int blocklen);
+void set_viterbi27_polynomial(int polys[2]);
+int init_viterbi27(void *vp,int starting_state);
+int update_viterbi27_blk(void *vp,unsigned char syms[],int nbits);
+int chainback_viterbi27(void *vp, unsigned char *data,unsigned int nbits,unsigned int endstate);
+void delete_viterbi27(void *vp);
+.fi
+.sp
+.nf
+.ft B
+void *create_viterbi29(int blocklen);
+void set_viterbi29_polynomial(int polys[2]);
+int init_viterbi29(void *vp,int starting_state);
+int update_viterbi29_blk(void *vp,unsigned char syms[],int nbits);
+int chainback_viterbi29(void *vp, unsigned char *data,unsigned int nbits,unsigned int endstate);
+void delete_viterbi29(void *vp);
+.fi
+.sp
+.nf
+.ft B
+void *create_viterbi39(int blocklen);
+void set_viterbi39_polynomial(int polys[3]);
+int init_viterbi39(void *vp,int starting_state);
+int update_viterbi39_blk(void *vp,unsigned char syms[],int nbits);
+int chainback_viterbi39(void *vp, unsigned char *data,unsigned int nbits,unsigned int endstate);
+void delete_viterbi39(void *vp);
+.fi
+.sp
+.nf
+.ft B
+void *create_viterbi615(int blocklen);
+void set_viterbi615_polynomial(int polys[6]);
+int init_viterbi615(void *vp,int starting_state);
+int update_viterbi615_blk(void *vp,unsigned char syms[],int nbits);
+int chainback_viterbi615(void *vp, unsigned char *data,unsigned int nbits,unsigned int endstate);
+void delete_viterbi615(void *vp);
+.fi
+.SH DESCRIPTION
+These functions implement high performance Viterbi decoders for four
+convolutional codes: a rate 1/2 constraint length 7 (k=7) code
+("viterbi27"), a rate 1/2 k=9 code ("viterbi29"),
+a rate 1/3 k=9 code ("viterbi39") and a rate 1/6 k=15 code ("viterbi615").
+The decoders use the Intel IA32 or PowerPC SIMD instruction sets, if available, to improve
+decoding speed.
+
+On the IA32 there are three different SIMD instruction sets. The first
+and most common is MMX, introduced on later Intel Pentiums and then on
+the Intel Pentium II and most Intel clones (AMD K6, Transmeta Crusoe,
+etc).  SSE was introduced on the Pentium III and later implemented in
+the AMD Athlon 4 (AMD calls it "3D Now!  Professional"). Most
+recently, SSE2 was introduced in the Intel Pentium 4, and has been
+adopted by more recent AMD CPUs. The presence of SSE2 implies the
+existence of SSE, which in turn implies MMX.
+
+Altivec is the PowerPC SIMD instruction set. It is roughly comparable
+to SSE2. Altivec was introduced to the general public in the Apple
+Macintosh G4; it is also present in the G5. Altivec is actually a
+Motorola trademark; Apple calls it "Velocity Engine" and IBM calls it
+"VMX". All refer to the same thing.
+
+When built for the IA32 or PPC architectures, the functions
+automatically use the most powerful SIMD instruction set available. If
+no SIMD instructions are available, or if the library is built for a
+non-IA32, non-PPC machine, a portable C version is executed
+instead.
+
+.SH USAGE
+Four versions of each function are provided, one for each code.
+In the following discussion, change "viterbi" to "viterbi27", "viterbi29", "viterbi39"
+or "viterbi615" as desired. 
+
+Before Viterbi decoding can begin, an instance must first be created with
+\fBcreate_viterbi()\fR.  This function creates and returns a pointer to
+an internal control structure
+containing the path metrics and the branch
+decisions. \fBcreate_viterbi()\fR takes one argument that gives the
+length of the data block in bits. You \fImust not\fR attempt to
+decode a block longer than the length given to \fBcreate_viterbi()\fR.
+
+Before decoding a new frame,
+\fBinit_viterbi()\fR must be called to reset the decoder state.
+It accepts the instance pointer returned by
+\fBcreate_viterbi()\fR and the initial starting state of the
+convolutional encoder (usually 0). If the initial starting state is unknown or
+incorrect, the decoder will still function but the decoded data may be
+incorrect at the start of the block.
+
+Blocks of received symbols are processed with calls to
+\fBupdate_viterbi_blk()\fR.  The \fBnbits\fR parameter specifies the
+number of \fIdata bits\fR (not channel symbols) represented by the
+\fBsyms\fR buffer. (For rate 1/2 codes, the number of symbols in
+\fBsyms\fR is twice \fInbits\fR, and so on.)
+Each symbol is expected to range
+from 0 through 255, with 0 corresponding to a "strong 0" and 255
+corresponding to a "strong 1". The caller is responsible for
+determining the proper pairing of input symbols (commonly known as
+decoder symbol phasing).
+
+At the end of the block, the data is recovered with a call to
+\fBchainback_viterbi()\fR. The arguments are the pointer to the
+decoder instance, a pointer to a user-supplied buffer into which the
+decoded data is to be written, the number of data bits (not bytes)
+that are to be decoded, and the terminal state of the convolutional
+encoder at the end of the frame (usually 0). If the terminal state is
+incorrect or unknown, the decoded data bits at the end of the frame
+may be unreliable. The decoded data is written in big-endian order,
+i.e., the first bit in the frame is written into the high order bit of
+the first byte in the buffer. If the frame is not an integral number
+of bytes long, the low order bits of the last byte in the frame will
+be unused.
+
+Note that the decoders assume the use of a tail, i.e., the encoding
+and transmission of a sufficient number of padding bits beyond the end
+of the user data to force the convolutional encoder into the known
+terminal state given to \fBchainback_viterbi()\fR. The tail is
+always one bit less than the constraint length of the code, so the k=7
+code uses 6 tail bits (12 tail symbols), the k=9 code uses 8 tail bits
+(16 tail symbols) and the k=15 code uses 14 tail bits (84 tail
+symbols).
+
+The tail bits are not included in the length arguments to
+\fBcreate_viterbi()\fR and \fBchainback_viterbi()\fR. For example, if
+the block contains 1000 user bits, then this would be the length
+parameter given to \fBcreate_viterbi27()\fR and
+\fBchainback_viterbi27()\fR, and \fBupdate_viterbi27_blk()\fR would be called
+with a total of 2012 symbols - the last 12 encoded symbols
+representing the tail bits.
+
+After the call to \fBchainback_viterbi()\fR, the decoder may be reset
+with a call to \fBinit_viterbi()\fR and another block can be decoded.
+Alternatively, \fBdelete_viterbi()\fR can be called to free all resources
+used by the Viterbi decoder.
+
+The \fBset_viterbi_polynomial()\fR function allows use of other than the default
+code generator polynomials. Although only one set of polynomials are generally
+used with each code, there can are different conventions as to their order and
+symbol polarity, and these functions simplifies their use.
+
+The default polynomials for the viterbi27 routes
+are those of the NASA-JPL convention \fIwithout\fR symbol inversion.
+The NASA-JPL convention normally inverts the first symbol.
+The CCSDS/NASA-GSFC convention swaps the two symbols and inverts the second.
+.sp
+To set the NASA-JPL convention with symbol inversion:
+.sp
+.nf
+.ft B
+int polys[2] = { -V27POLYA,V27POLYB };
+set_viterbi27_polynomial(polys);
+.ft R
+.fi
+.sp
+and to set the CCSDS convention with symbol inversion:
+.sp
+.nf
+.ft B
+int polys[2] = { V27POLYB,-V27POLYA };
+set_viterbi27_polynomial(polys);
+.ft R
+.fi
+.sp
+The default polynomials for the viterbi615 routines
+are those used by the Cassini spacecraft \fIwithout\fR
+symbol inversion. Mars Pathfinder (MPF) and STEREO
+swap the third and fourth polynomials.
+Both conventions invert the
+first, third and fifth symbols. Refer to fec.h for the polynomial constant definitions.
+.sp
+To set the Cassini convention with symbol inversion, do the following:
+
+.nf
+.ft B
+int polys[6] = { -V615POLYA,V615POLYB,-V615POLYC,V615POLYD,-V615POLYE,V615POLYF };
+set_viterbi615_polynomial(polys);
+.ft R
+.fi
+.sp
+and to set the MPF/STEREO convention with symbol inversion:
+.sp
+.nf
+.ft B
+int polys[6] = { -V615POLYA,V615POLYB,-V615POLYD,V615POLYC,-V615POLYE,V615POLYF };
+set_viterbi615_polynomial(polys);
+.ft R
+.fi
+
+For performance reasons, calling this function changes the code
+generator polynomials for \fIall\fR instances of corresponding Viterbi decoder,
+including those already created.
+
+.SH ERROR PERFORMANCE
+These decoders have all been extensively tested and found to provide
+performance consistent with that expected for soft-decision Viterbi
+decoding with 8-bit symbols.
+
+Due to internal differences, the implementations
+vary slightly in error performance. In
+general, the portable C versions exhibit the best error performance
+because they use full-sized branch metrics, and the MMX versions
+exhibit the worst because they use 8-bit branch metrics with modulo
+comparisons. The SSE, SSE2 and Altivec implementations of the r=1/2 k=7 and
+r=1/2 k=9 codes use unsigned
+8-bit branch metrics, and are almost as good as the C versions.  The
+r=1/3 k=9 and r=1/6 k=15 codes are implemented with 16-bit path metrics in all SIMD
+versions.
+
+.SH DIRECT ACCESS TO SPECIFIC FUNCTION VERSIONS
+Calling the functions listed above automatically calls the appropriate
+version of the function depending on the CPU type and available SIMD
+instructions. A particular version can also be called directly by
+appending the appropriate suffix to the function name. The available
+suffixes are "_mmx", "_sse", "_sse2", "_av" and "_port", for the MMX,
+SSE, SSE2, Altivec and portable versions, respectively. For example,
+the SSE2 version of the update_viterbi27_blk() function can be invoked
+as update_viterbi27_blk_sse2().
+
+Naturally, the _av functions are only available on the PowerPC and the
+_mmx, _sse and _sse2 versions are only available on IA-32. Calling
+a SIMD-enabled function on a CPU that doesn't support the appropriate
+set of instructions will result in an illegal instruction exception.
+
+.SH RETURN VALUES
+\fBcreate_viterbi\fR returns a pointer to the structure containing
+the decoder state. 
+The other functions return -1 on error, 0 otherwise.
+
+.SH AUTHOR & COPYRIGHT
+Phil Karn, KA9Q (karn@ka9q.net)
+
+.SH LICENSE
+This software may be used under the terms of the GNU Limited General Public License (LGPL).
+
+
