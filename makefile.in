@@ -230,6 +230,8 @@ viterbi615_sse2.o: viterbi615_sse2.c fec.h
 
 cpu_mode_x86.o: cpu_mode_x86.c fec.h
 
+cpu_mode_x86_64.o: cpu_mode_x86_64.c fec.h
+
 cpu_mode_ppc.o: cpu_mode_ppc.c fec.h
 
 

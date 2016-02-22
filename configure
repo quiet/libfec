@@ -3105,6 +3105,9 @@ powerpc*)
 	encode_rs_av.o \
 	dotprod_av.o sumsq_av.o peakval_av.o cpu_mode_ppc.o"
 	;;
+x86_64*)
+	MLIBS="cpu_mode_x86_64.o"
+	;;
 *)
 	MLIBS=
 esac
