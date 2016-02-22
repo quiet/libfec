@@ -53,7 +53,7 @@ void *initdp(signed short coeffs[],int len){
 void freedp(void *p){
   switch(Cpu_mode){
   case PORT:
-  default:
+  default: ;
 #ifdef __i386__
   case MMX:
   case SSE:
