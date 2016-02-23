@@ -35,5 +35,11 @@ broken.
 28 Mar 2004
 Phil Karn, karn@ka9q.net
 
+-----------------------------
+ADDENDUM
 
+The original libfec did not know about x86-64. This caused builds to break on that CPU family.
 
+This version contains a (lightly modified) working build. It does not contain optimized assembly instructions for x86-64, however.
+
+Also, when building under x86-64, it is necessary to tell libfec about your host. This can easily be accomplished by passing the --build flag to ./configure. For example, if the standard ./configure contained here thinks that my host is i386-apple-darwin15.0.0, then I will call `./configure --build=x86_64-apple-darwin15.0.0`.
