@@ -59,10 +59,11 @@ powerpc*)
 	dotprod_av.o sumsq_av.o peakval_av.o cpu_mode_ppc.o"
 	;;
 x86_64*)
-	MLIBS="cpu_mode_x86_64.o"
+	MLIBS="cpu_mode_unknown.o"
 	;;
 *)
-	MLIBS=
+	MLIBS="cpu_mode_unknown.o"
+	;;
 esac
 case $target_os in
 darwin*)
