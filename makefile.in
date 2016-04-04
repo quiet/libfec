@@ -149,10 +149,10 @@ gen_ccsds: gen_ccsds.o init_rs_char_local.o
 	gcc -o $@ $^
 
 gen_ccsds.o: gen_ccsds.c
-	gcc  $(CFLAGS) -c -o $@ $<
+	gcc  $(BUILD_CFLAGS) -c -o $@ $<
 
 init_rs_char_local.o: init_rs_char_local.c
-	gcc $(CFLAGS) -c -o $@ $<
+	gcc $(BUILD_CFLAGS) -c -o $@ $<
 
 ccsds_tal.o: ccsds_tal.c
 
@@ -160,7 +160,7 @@ gen_ccsds_tal: gen_ccsds_tal.o
 	gcc -o $@ $^
 
 gen_ccsds_tal.o: gen_ccsds_tal.c
-	gcc $(CFLAGS) -c -o $@ $<
+	gcc $(BUILD_CFLAGS) -c -o $@ $<
 
 ccsds_tal.c: gen_ccsds_tal
 	./gen_ccsds_tal > ccsds_tal.c
