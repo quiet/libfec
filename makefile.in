@@ -18,7 +18,7 @@ LIBS=@MLIBS@ fec.o sim.o viterbi27.o viterbi27_port.o viterbi29.o viterbi29_port
 	peakval.o peakval_port.o \
 	sumsq.o sumsq_port.o
 
-CFLAGS=@CFLAGS@ -I. -Wall @ARCH_OPTION@
+CFLAGS=@CFLAGS@ -fPIC -I. -Wall @ARCH_OPTION@
 
 SHARED_LIB=@SH_LIB@
 
