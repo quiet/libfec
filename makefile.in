@@ -8,7 +8,10 @@ prefix = @prefix@
 exec_prefix=@exec_prefix@
 VPATH = @srcdir@
 CC=@CC@
-LIBS=@MLIBS@ fec.o sim.o viterbi27.o viterbi27_port.o viterbi29.o viterbi29_port.o \
+AR=@AR@
+RANLIB=@RANLIB@
+AS=@AS@
+LIBS=@MLIBS@ fec.o viterbi27.o viterbi27_port.o viterbi29.o viterbi29_port.o \
 	viterbi39.o viterbi39_port.o \
 	viterbi615.o viterbi615_port.o encode_rs_char.o encode_rs_int.o encode_rs_8.o \
 	decode_rs_char.o decode_rs_int.o decode_rs_8.o \
@@ -19,6 +22,7 @@ LIBS=@MLIBS@ fec.o sim.o viterbi27.o viterbi27_port.o viterbi29.o viterbi29_port
 	sumsq.o sumsq_port.o
 
 CFLAGS=@CFLAGS@ -fPIC -I. -Wall @ARCH_OPTION@
+LDFLAGS=@LDFLAGS@
 
 SHARED_LIB=@SH_LIB@
 
@@ -91,8 +95,8 @@ vtest615.o: vtest615.c fec.h
 	gcc -g -c $<
 
 libfec.a: $(LIBS)
-	ar rv $@ $^
-	ranlib libfec.a
+	$(AR) rv $@ $^
+	$(RANLIB) libfec.a
 
 # for Darwin
 libfec.dylib: $(LIBS)
@@ -100,7 +104,7 @@ libfec.dylib: $(LIBS)
 
 # for Linux et al
 libfec.so: $(LIBS)
-	gcc -shared -Xlinker -soname=$@ -o $@ -Wl,-whole-archive $^ -Wl,-no-whole-archive -lc
+	$(CC) $(LDFLAGS) -shared -Xlinker -soname=$@ -o $@ -Wl,-whole-archive $^ -Wl,-no-whole-archive -lc
 
 dotprod.o: dotprod.c fec.h
 
@@ -184,13 +188,13 @@ viterbi27_port.o: viterbi27_port.c fec.h
 viterbi27_av.o: viterbi27_av.c fec.h
 
 viterbi27_mmx.o: viterbi27_mmx.c fec.h
-	gcc $(CFLAGS) -mmmx -c -o $@ $<
+	$(CC) $(CFLAGS) -mmmx -c -o $@ $<
 
 viterbi27_sse.o: viterbi27_sse.c fec.h
-	gcc $(CFLAGS) -msse -c -o $@ $<
+	$(CC) $(CFLAGS) -msse -c -o $@ $<
 
 viterbi27_sse2.o: viterbi27_sse2.c fec.h
-	gcc $(CFLAGS) -msse2 -c -o $@ $<
+	$(CC) $(CFLAGS) -msse2 -c -o $@ $<
 
 viterbi29.o: viterbi29.c fec.h
 
@@ -199,13 +203,13 @@ viterbi29_port.o: viterbi29_port.c fec.h
 viterbi29_av.o: viterbi29_av.c fec.h
 
 viterbi29_mmx.o: viterbi29_mmx.c fec.h
-	gcc $(CFLAGS) -mmmx -c -o $@ $<
+	$(CC) $(CFLAGS) -mmmx -c -o $@ $<
 
 viterbi29_sse.o: viterbi29_sse.c fec.h
-	gcc $(CFLAGS) -msse -c -o $@ $<
+	$(CC) $(CFLAGS) -msse -c -o $@ $<
 
 viterbi29_sse2.o: viterbi29_sse2.c fec.h
-	gcc $(CFLAGS) -msse2 -c -o $@ $<
+	$(CC) $(CFLAGS) -msse2 -c -o $@ $<
 
 viterbi39.o: viterbi39.c fec.h
 
@@ -214,13 +218,13 @@ viterbi39_port.o: viterbi39_port.c fec.h
 viterbi39_av.o: viterbi39_av.c fec.h
 
 viterbi39_mmx.o: viterbi39_mmx.c fec.h
-	gcc $(CFLAGS) -mmmx -c -o $@ $<
+	$(CC) $(CFLAGS) -mmmx -c -o $@ $<
 
 viterbi39_sse.o: viterbi39_sse.c fec.h
-	gcc $(CFLAGS) -msse -c -o $@ $<
+	$(CC) $(CFLAGS) -msse -c -o $@ $<
 
 viterbi39_sse2.o: viterbi39_sse2.c fec.h
-	gcc $(CFLAGS) -msse2 -c -o $@ $<
+	$(CC) $(CFLAGS) -msse2 -c -o $@ $<
 
 viterbi615.o: viterbi615.c fec.h
 
@@ -229,13 +233,13 @@ viterbi615_port.o: viterbi615_port.c fec.h
 viterbi615_av.o: viterbi615_av.c fec.h
 
 viterbi615_mmx.o: viterbi615_mmx.c fec.h
-	gcc $(CFLAGS) -mmmx -c -o $@ $<
+	$(CC) $(CFLAGS) -mmmx -c -o $@ $<
 
 viterbi615_sse.o: viterbi615_sse.c fec.h
-	gcc $(CFLAGS) -msse -c -o $@ $<
+	$(CC) $(CFLAGS) -msse -c -o $@ $<
 
 viterbi615_sse2.o: viterbi615_sse2.c fec.h
-	gcc $(CFLAGS) -msse2 -c -o $@ $<
+	$(CC) $(CFLAGS) -msse2 -c -o $@ $<
 
 cpu_mode_x86.o: cpu_mode_x86.c fec.h
 

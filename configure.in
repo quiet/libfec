@@ -34,6 +34,18 @@ then
 	AC_MSG_ERROR([Need string.h])
 fi
 
+AC_PROG_RANLIB
+
+AN_MAKEVAR([AS], [AC_PROG_AS])
+AN_PROGRAM([as], [AC_PROG_AS])
+AC_DEFUN([AC_PROG_AS], [AC_CHECK_TOOL(AS, as, :)])
+AC_PROG_AS
+
+AN_MAKEVAR([AR], [AC_PROG_AR])
+AN_PROGRAM([ar], [AC_PROG_AR])
+AC_DEFUN([AC_PROG_AR], [AC_CHECK_TOOL(AR, ar, :)])
+AC_PROG_AR
+
 AC_CANONICAL_SYSTEM
 case $target_cpu in
 i386|i486|i586|i686)
@@ -75,6 +87,11 @@ darwin*)
 	REBIND=ldconfig
 	;;
 esac
+if test "$target" != "$build"
+then
+	echo "skipping ldconfig for cross-compiling"
+	REBIND=""
+fi
 AC_SUBST(SH_LIB)
 AC_SUBST(REBIND)
 AC_SUBST(MLIBS)
