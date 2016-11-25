@@ -1,7 +1,7 @@
 .text
-.global cpu_features
-	.type cpu_features,@function
-cpu_features:	
+.global _cpu_features
+	#.type cpu_features,@function
+_cpu_features:	
 	pushl %ebx
 	pushl %ecx
 	pushl %edx

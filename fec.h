@@ -6,6 +6,14 @@
 #ifndef _FEC_H_
 #define _FEC_H_
 
+#ifdef __MINGW32__
+#define posix_memalign __mingw_aligned_malloc
+#endif
+
+#ifdef _M_IX86
+#define __i386__
+#endif
+
 /* r=1/2 k=7 convolutional encoder polynomials
  * The NASA-DSN convention is to use V27POLYA inverted, then V27POLYB
  * The CCSDS/NASA-GSFC convention is to use V27POLYB, then V27POLYA inverted
@@ -264,7 +272,18 @@ void find_cpu_mode(void); /* Call this once at startup to set Cpu_mode */
 /* Determine parity of argument: 1 = odd, 0 = even */
 #ifdef __i386__
 static inline int parityb(unsigned char x){
+  #ifdef __GNUC__
   __asm__ __volatile__ ("test %1,%1;setpo %0" : "=g"(x) : "r" (x));
+  #elif _MSC_VER
+  int par = x;
+  __asm {
+    mov eax, par
+    test eax, eax
+    setpo eax
+    mov par, eax
+  }
+  x = (unsigned char) (par & 0xFF);
+  #endif
   return x;
 }
 #else

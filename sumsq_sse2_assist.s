@@ -5,10 +5,10 @@
 	.text
 # Evaluate sum of squares of signed 16-bit input samples
 #  long long sumsq_sse2_assist(signed short *in,int cnt);	
-	.global sumsq_sse2_assist
-	.type sumsq_sse2_assist,@function
+	.global _sumsq_sse2_assist
+	#.type sumsq_sse2_assist,@function
 	.align 16
-sumsq_sse2_assist:
+_sumsq_sse2_assist:
 	pushl %ebp
 	movl %esp,%ebp
 	pushl %esi

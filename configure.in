@@ -82,6 +82,11 @@ darwin*)
 	SH_LIB=libfec.dylib
 	REBIND=""
 	;;
+mingw32*)
+	echo "MINGW32 HEYYY!"
+	SH_LIB=libfec.def
+	REBIND=""
+	;;
 *)
 	SH_LIB=libfec.so
 	REBIND=ldconfig
