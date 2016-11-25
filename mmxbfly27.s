@@ -13,11 +13,11 @@
 	.set OLDMETRICS,132
 	.set NEWMETRICS,136
 	.text	
-	.global update_viterbi27_blk_mmx,Mettab27_1,Mettab27_2
-	.type update_viterbi27_blk_mmx,@function
+	.global _update_viterbi27_blk_mmx, _Mettab27_1, _Mettab27_2
+	#.type update_viterbi27_blk_mmx,@function
 	.align 16
 	
-update_viterbi27_blk_mmx:
+_update_viterbi27_blk_mmx:
 	pushl %ebp
 	movl %esp,%ebp
 	pushl %esi
@@ -55,10 +55,10 @@ update_viterbi27_blk_mmx:
 	# each invocation of this macro will do 8 butterflies in parallel
 	.MACRO butterfly GROUP
 	# Compute branch metrics
-	movq (Mettab27_1+8*\GROUP)(%eax),%mm3
+	movq (_Mettab27_1+8*\GROUP)(%eax),%mm3
 	movq fifteens,%mm0	
 
-	paddb (Mettab27_2+8*\GROUP)(%ebx),%mm3
+	paddb (_Mettab27_2+8*\GROUP)(%ebx),%mm3
 	paddb ones,%mm3  # emulate pavgb - this may not be necessary
 	psrlq $1,%mm3
 	pand %mm0,%mm3

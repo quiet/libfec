@@ -13,9 +13,9 @@
 # May be used under the terms of the GNU Lesser General Public License (LGPL)
 	
 	.text
-	.global dotprod_mmx_assist
-	.type dotprod_mmx_assist,@function
-dotprod_mmx_assist:
+	.global _dotprod_mmx_assist
+	#.type dotprod_mmx_assist,@function
+_dotprod_mmx_assist:
 	pushl %ebp
 	movl %esp,%ebp
 	pushl %esi

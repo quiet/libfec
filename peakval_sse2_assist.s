@@ -6,10 +6,10 @@
 
 # Find peak absolute value in signed 16-bit input samples
 #  int peakval_sse2_assist(signed short *in,int cnt);
-	.global peakval_sse2_assist
-	.type peakval_sse2_assist,@function
+	.global _peakval_sse2_assist
+	#.type peakval_sse2_assist,@function
 	.align 16
-peakval_sse2_assist:
+_peakval_sse2_assist:
 	pushl %ebp
 	movl %esp,%ebp
 	pushl %esi

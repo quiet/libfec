@@ -6,10 +6,10 @@
 
 # Evaluate sum of squares of signed 16-bit input samples
 #  long long sumsq_mmx_assist(signed short *in,int cnt);	
-	.global sumsq_mmx_assist
-	.type sumsq_mmx_assist,@function
+	.global _sumsq_mmx_assist
+	#.type sumsq_mmx_assist,@function
 	.align 16
-sumsq_mmx_assist:
+_sumsq_mmx_assist:
 	pushl %ebp
 	movl %esp,%ebp
 	pushl %esi
@@ -50,9 +50,9 @@ sumsq_mmx_assist:
 #  long sumsq_wd_mmx_assist(signed short *in,int cnt);
 #  Quick version, only safe for small numbers of small input values...
 	.global sumsq_wd_mmx_assist
-	.type sumsq_wd_mmx_assist,@function
+	#.type sumsq_wd_mmx_assist,@function
 	.align 16
-sumsq_wd_mmx_assist:
+_sumsq_wd_mmx_assist:
 	pushl %ebp
 	movl %esp,%ebp
 	pushl %esi

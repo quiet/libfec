@@ -6,10 +6,10 @@
 
 # Find peak value in signed 16-bit input samples
 #  int peakval_mmx_assist(signed short *in,int cnt);	
-	.global peakval_mmx_assist
-	.type peakval_mmx_assist,@function
+	.global _peakval_mmx_assist
+	#.type peakval_mmx_assist,@function
 	.align 16
-peakval_mmx_assist:
+_peakval_mmx_assist:
 	pushl %ebp
 	movl %esp,%ebp
 	pushl %esi

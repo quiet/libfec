@@ -14,11 +14,11 @@
 	.set NEWMETRICS,520
 
 	.text	
-	.global update_viterbi29_blk_sse2,Branchtab29_sse2
-	.type update_viterbi29_blk_sse2,@function
+	.global _update_viterbi29_blk_sse2,_Branchtab29_sse2
+	#.type update_viterbi29_blk_sse2,@function
 	.align 16
 	
-update_viterbi29_blk_sse2:
+_update_viterbi29_blk_sse2:
 	pushl %ebp
 	movl %esp,%ebp
 	pushl %esi
@@ -63,8 +63,8 @@ update_viterbi29_blk_sse2:
 	# each invocation of this macro does 16 butterflies in parallel
 	.MACRO butterfly GROUP
 	# compute branch metrics
-	movdqa Branchtab29_sse2+(16*\GROUP),%xmm4
-	movdqa Branchtab29_sse2+128+(16*\GROUP),%xmm3
+	movdqa _Branchtab29_sse2+(16*\GROUP),%xmm4
+	movdqa _Branchtab29_sse2+128+(16*\GROUP),%xmm3
 	pxor %xmm6,%xmm4
 	pxor %xmm5,%xmm3
 	pavgb %xmm3,%xmm4

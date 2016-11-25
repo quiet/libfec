@@ -3834,6 +3834,10 @@ darwin*)
 	SH_LIB=libfec.dylib
 	REBIND=""
 	;;
+mingw32*)
+  SH_LIB=libfec.def
+  REBIND=""
+  ;;
 *)
 	SH_LIB=libfec.so
 	REBIND=ldconfig
