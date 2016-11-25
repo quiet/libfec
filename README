@@ -1,3 +1,26 @@
+libfec
+======
+
+This is a version of libfec that is able to compile in both linux and windows. It's also possible to link it against MSVC.
+
+To compile:
+
+```bash
+./configure
+make
+```
+
+For linking in MSVC compile it with mingw (normally) and then open Visual Studio Console:
+
+```
+lib /machine:i386 /def:libfec.def
+```
+
+A `libfec.lib` and `libfec.exp` should be generated.
+
+Phil Karn original README
+=========================
+
 COPYRIGHT
 
 This package is copyright 2006 by Phil Karn, KA9Q. It may be used

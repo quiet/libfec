@@ -1,2 +1,17 @@
 build/
 *~
+config.h
+config.log
+config.status
+gen_ccsds.exe
+gen_ccsds_tal.exe
+gen_ccsds
+gen_ccsds_tal
+*.o
+makefile
+*.a
+*.def
+*.lib
+*.exp
+ccsds_tab.c
+ccsds_tal.c
