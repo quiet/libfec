@@ -35,9 +35,9 @@ useful in modems implemented with digital signal processing (DSP).
 The following routines are provided:
 
 1. Viterbi decoders for the following convolutional codes:
-    **r=1/2 k=7** ("Voyager" code, now a widely used industry standard)
-    **r=1/2 k=9** (Used on the IS-95 CDMA forward link)
-    **r=1/6 k=15** ("Cassini" code, used by several NASA/JPL deep space missions)
+   *  **r=1/2 k=7** ("Voyager" code, now a widely used industry standard)
+   *  **r=1/2 k=9** (Used on the IS-95 CDMA forward link)
+   *  **r=1/6 k=15** ("Cassini" code, used by several NASA/JPL deep space missions)
 
 2. Reed-Solomon encoders and decoders for any user-specified code.
 
