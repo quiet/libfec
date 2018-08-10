@@ -19,7 +19,7 @@ LIBS=@MLIBS@ fec.o viterbi27.o viterbi27_port.o viterbi29.o viterbi29_port.o \
 	encode_rs_ccsds.o decode_rs_ccsds.o ccsds_tal.o \
 	dotprod.o dotprod_port.o \
 	peakval.o peakval_port.o \
-	sumsq.o sumsq_port.o
+	sumsq.o sumsq_port.o sim.o
 
 CFLAGS=@CFLAGS@ -fPIC -I. -Wall @ARCH_OPTION@
 LDFLAGS=@LDFLAGS@
